@@ -7,22 +7,23 @@ use std::collections::BTreeSet;
 #[cfg(target_arch = "wasm32")]
 use eframe::wasm_bindgen::{self, prelude::*};
 use eframe::{egui, epi};
+use crate::sidebar::SideBar;
 
+mod info;
 mod projects;
 mod sidebar;
-mod user_info;
 
 pub struct MainPage {
     windows: Vec<Box<dyn Window>>,
     visible_windows: BTreeSet<String>,
-    sidebar_window: sidebar::SideBar,
     window_names: Vec<String>,
 }
 
 impl Default for MainPage {
     fn default() -> Self {
         let windows: Vec<Box<dyn crate::Window>> = vec![
-            Box::new(user_info::UserInfo::default()),
+            Box::new(info::AboutMe::default()),
+            Box::new(info::AboutSite::default()),
             Box::new(projects::ProjectWindow::default()),
         ];
         let mut visible_windows = BTreeSet::new();
@@ -35,16 +36,15 @@ impl Default for MainPage {
             windows,
             visible_windows,
             window_names,
-            sidebar_window: sidebar::SideBar::default(),
         }
     }
 }
 
 fn set_visibilty(visible_windows: &mut BTreeSet<String>, status: bool, key: &'static str) {
-    if !status {
-        visible_windows.remove(key);
-    } else {
+    if status {
         visible_windows.insert(key.to_owned());
+    } else {
+        visible_windows.remove(key);
     }
 }
 
@@ -67,8 +67,7 @@ impl epi::App for MainPage {
     }
 
     fn update(&mut self, ctx: &egui::CtxRef, _frame: &epi::Frame) {
-        self.sidebar_window
-            .show(ctx, &self.window_names, &mut self.visible_windows);
+        SideBar::show(ctx, &self.window_names, &mut self.visible_windows);
         for window in &self.windows {
             let mut is_visible = self.visible_windows.contains(window.name());
             window.show(ctx, &mut is_visible);

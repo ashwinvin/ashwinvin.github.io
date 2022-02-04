@@ -7,7 +7,6 @@ pub struct SideBar;
 
 impl SideBar {
     pub fn show(
-        &self,
         ctx: &egui::CtxRef,
         windows: &[String],
         visible_windows: &mut BTreeSet<String>,
@@ -20,17 +19,17 @@ impl SideBar {
                 for window in windows {
                     let mut checked = visible_windows.contains(window);
                     ui.checkbox(&mut checked, window);
-                    if !checked {
-                        visible_windows.remove(window);
+                    if checked {
+                        visible_windows.insert(window.to_string());
                     } else {
-                        visible_windows.insert(window.to_owned());
+                        visible_windows.remove(window);
                     }
                 }
                 ui.separator();
                 if ui.button("Organize Windows").clicked() {
                     ctx.memory().reset_areas();
                 }
-            })
+            });
         });
     }
 }

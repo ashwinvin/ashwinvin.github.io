@@ -9,12 +9,13 @@ rust-version = "1.56"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
+name = "ashwinvin"
 
 [dependencies]
 eframe = "0.16.0"  # Gives us egui, epi and web+native backends
 
 serde = { version = "1", features = ["derive"]}
-
+ehttp = {git = "https://github.com/emilk/ehttp"}
 
 [profile.release]
 opt-level = 2 # fast and small wasm

@@ -4,6 +4,7 @@ use eframe::egui::{CollapsingHeader, CtxRef, Ui, Window};
 
 pub struct Project {
     name: String,
+    // repo: String,
     details: HashMap<String, (String, String)>,
 }
 
@@ -15,6 +16,7 @@ impl Default for ProjectWindow {
     fn default() -> Self {
         let projects = vec![Project {
             name: "Visionlib".to_owned(),
+            // repo: "https://ashwinvin.github.io/Visionlib/".to_owned(),
             details: HashMap::from([
                 (
                     "Documentation:".to_owned(),
@@ -58,10 +60,10 @@ impl ProjectWindow {
                         ui.label("Watchers: ");
                     });
                     CollapsingHeader::new("Details").show(ui, |ui| {
-                        for (heading, details) in project.details.iter() {
+                        for (heading, details) in &project.details {
                             ui.horizontal(|ui| {
                                 ui.label(heading);
-                                ui.hyperlink_to(&details.0, &details.1)
+                                ui.hyperlink_to(&details.0, &details.1);
                             });
                         }
                     });
@@ -69,11 +71,12 @@ impl ProjectWindow {
             });
         }
     }
+    // fn get_project_data(&self, repo_name: String) {}
 }
 
 impl crate::Window for ProjectWindow {
     fn name(&self) -> &'static str {
-        "Projects"
+        "⚡ Projects"
     }
 
     fn show(&self, ctx: &CtxRef, state: &mut bool) {
