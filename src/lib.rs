@@ -4,10 +4,10 @@
 
 use std::collections::BTreeSet;
 
+use crate::sidebar::SideBar;
 #[cfg(target_arch = "wasm32")]
 use eframe::wasm_bindgen::{self, prelude::*};
 use eframe::{egui, epi};
-use crate::sidebar::SideBar;
 
 mod info;
 mod projects;

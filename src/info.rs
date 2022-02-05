@@ -1,10 +1,17 @@
-use eframe::egui::{CtxRef, Window};
+use eframe::egui::{CtxRef, Ui, WidgetText, Window};
 
 #[derive(Default)]
 pub struct AboutMe;
 
 #[derive(Default)]
 pub struct AboutSite;
+
+fn add_detail(ui: &mut Ui, heading: impl Into<WidgetText>, label: impl Into<WidgetText>, url: impl ToString) {
+    ui.horizontal(|ui| {
+        ui.label(heading);
+        ui.hyperlink_to(label, url);
+    });
+}
 
 impl crate::Window for AboutMe {
     fn name(&self) -> &'static str {
@@ -29,6 +36,12 @@ impl crate::Window for AboutMe {
                      learning rust. I also have experience in administrating linux systems, \
                      postgresql, mysql, building discord bots and REST APIs.",
                     );
+                });
+                ui.separator();
+                ui.collapsing("Contact", |ui| {
+                    add_detail(ui, "Github: ", "ashwinvin", "https://github.com/ashwinvin");
+                    add_detail(ui, "Mail", "ashwinvinodsa@gmail.com", "mailto:ashwinvinodsa@gmail.com");
+                    add_detail(ui, "Discord", "Ashu~#1898", "");
                 });
             });
     }
@@ -56,8 +69,10 @@ impl crate::Window for AboutSite {
                 mind to rewrite my website in rust!.",
                     );
                     ui.separator();
-                    ui.monospace("This website is written in rust using egui then compiled to \
-                    wasm and rendered by WebGL 😉");
+                    ui.monospace(
+                        "This website is written in rust using egui then compiled to \
+                    wasm and rendered by WebGL 😉",
+                    );
                 })
             });
     }

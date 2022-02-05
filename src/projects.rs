@@ -54,19 +54,23 @@ impl ProjectWindow {
                     ui.heading(&project.name);
                     ui.separator();
                     ui.label("A simple, easy to use, feature rich, customizable cv library");
-                    CollapsingHeader::new("Stats").show(ui, |ui| {
-                        ui.label("Stars: ");
-                        ui.label("Forks: ");
-                        ui.label("Watchers: ");
-                    });
-                    CollapsingHeader::new("Details").show(ui, |ui| {
-                        for (heading, details) in &project.details {
-                            ui.horizontal(|ui| {
-                                ui.label(heading);
-                                ui.hyperlink_to(&details.0, &details.1);
-                            });
-                        }
-                    });
+                    CollapsingHeader::new("Stats")
+                        .id_source(format!("{}-{}", &project.name, "stats"))
+                        .show(ui, |ui| {
+                            ui.label("Stars: ");
+                            ui.label("Forks: ");
+                            ui.label("Watchers: ");
+                        });
+                    CollapsingHeader::new("Details")
+                        .id_source(format!("{}-{}", &project.name, "details"))
+                        .show(ui, |ui| {
+                            for (heading, details) in &project.details {
+                                ui.horizontal(|ui| {
+                                    ui.label(heading);
+                                    ui.hyperlink_to(&details.0, &details.1);
+                                });
+                            }
+                        });
                 });
             });
         }

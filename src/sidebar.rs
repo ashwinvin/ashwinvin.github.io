@@ -6,11 +6,7 @@ use eframe::egui;
 pub struct SideBar;
 
 impl SideBar {
-    pub fn show(
-        ctx: &egui::CtxRef,
-        windows: &[String],
-        visible_windows: &mut BTreeSet<String>,
-    ) {
+    pub fn show(ctx: &egui::CtxRef, windows: &[String], visible_windows: &mut BTreeSet<String>) {
         egui::SidePanel::left("left_panel").show(ctx, |ui| {
             ui.heading("👋 Ashwin Vinod");
             ui.separator();
