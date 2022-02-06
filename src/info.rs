@@ -1,4 +1,4 @@
-use eframe::egui::{CtxRef, Ui, WidgetText, Window};
+use eframe::egui::{CollapsingHeader, CtxRef, RichText, Ui, WidgetText, Window};
 
 #[derive(Default)]
 pub struct AboutMe;
@@ -6,10 +6,23 @@ pub struct AboutMe;
 #[derive(Default)]
 pub struct AboutSite;
 
-fn add_detail(ui: &mut Ui, heading: impl Into<WidgetText>, label: impl Into<WidgetText>, url: impl ToString) {
+fn add_detail(
+    ui: &mut Ui,
+    heading: impl Into<String>,
+    label: impl Into<WidgetText>,
+    url: impl ToString,
+) {
     ui.horizontal(|ui| {
-        ui.label(heading);
+        ui.label(RichText::new(heading).strong());
         ui.hyperlink_to(label, url);
+    });
+}
+
+fn add_tech_stack(ui: &mut Ui, tech: impl Into<String>, desc: impl Into<WidgetText>) {
+    ui.group(|ui| {
+        ui.set_width(ui.available_width());
+        ui.label(RichText::new(tech).strong());
+        ui.label(desc);
     });
 }
 
@@ -19,7 +32,7 @@ impl crate::Window for AboutMe {
     }
 
     fn show(&self, ctx: &CtxRef, state: &mut bool) {
-        Window::new(self.name())
+        Window::new(RichText::new(self.name()).strong())
             .open(state)
             .resizable(false)
             .show(ctx, |ui| {
@@ -32,17 +45,51 @@ impl crate::Window for AboutMe {
                     );
                     ui.separator();
                     ui.label(
-                        "I'm proficient in python and is currently \
+                        "I'm proficient in python and I am currently \
                      learning rust. I also have experience in administrating linux systems, \
                      postgresql, mysql, building discord bots and REST APIs.",
                     );
                 });
                 ui.separator();
-                ui.collapsing("Contact", |ui| {
-                    add_detail(ui, "Github: ", "ashwinvin", "https://github.com/ashwinvin");
-                    add_detail(ui, "Mail", "ashwinvinodsa@gmail.com", "mailto:ashwinvinodsa@gmail.com");
-                    add_detail(ui, "Discord", "Ashu~#1898", "");
-                });
+                CollapsingHeader::new("Contact")
+                    .default_open(true)
+                    .show(ui, |ui| {
+                        add_detail(ui, "Github: ", "ashwinvin", "https://github.com/ashwinvin");
+                        add_detail(
+                            ui,
+                            "Mail",
+                            "ashwinvinodsa@gmail.com",
+                            "mailto:ashwinvinodsa@gmail.com",
+                        );
+                        add_detail(ui, "Discord", "Ashu~#1898", "");
+                    });
+
+                CollapsingHeader::new("Tech Stack")
+                    .default_open(true)
+                    .show(ui, |ui| {
+                        add_tech_stack(
+                            ui,
+                            "Python",
+                            "The main language I use for backend, simple scripts, scrapers \
+                        and discord bots.",
+                        );
+                        add_tech_stack(
+                            ui,
+                            "Rust",
+                            "The langauge I use for creating backends and applications which \
+                            need to be performant",
+                        );
+                        add_tech_stack(
+                            ui,
+                            "Postgres",
+                            "The DB which I mainly use for building my apps in.",
+                        );
+                        add_tech_stack(
+                            ui,
+                            "Others:",
+                            "Linux, GH actions, JS, Docker, Git, Redis, OpenCV",
+                        );
+                    });
             });
     }
 }
@@ -52,7 +99,7 @@ impl crate::Window for AboutSite {
         "📚 About This Website"
     }
     fn show(&self, ctx: &CtxRef, state: &mut bool) {
-        Window::new(self.name())
+        Window::new(RichText::new(self.name()).strong())
             .open(state)
             .resizable(false)
             .show(ctx, |ui| {

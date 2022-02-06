@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use crate::egui::RichText;
 use eframe::egui::{CollapsingHeader, CtxRef, Ui, Window};
 
 pub struct Project {
@@ -51,7 +52,7 @@ impl ProjectWindow {
         for project in &self.projects {
             ui.group(|ui| {
                 ui.vertical_centered(|ui| {
-                    ui.heading(&project.name);
+                    ui.heading(RichText::new(&project.name).strong());
                     ui.separator();
                     ui.label("A simple, easy to use, feature rich, customizable cv library");
                     CollapsingHeader::new("Stats")
@@ -84,7 +85,7 @@ impl crate::Window for ProjectWindow {
     }
 
     fn show(&self, ctx: &CtxRef, state: &mut bool) {
-        Window::new(self.name())
+        Window::new(RichText::new(self.name()).strong())
             .open(state)
             .resizable(false)
             .show(ctx, |ui| {
