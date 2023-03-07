@@ -67,7 +67,7 @@ impl epi::App for MainPage {
     }
 
     fn update(&mut self, ctx: &egui::CtxRef, _frame: &epi::Frame) {
-        SideBar::show(ctx, &self.window_names, &mut self.visible_windows);
+        // SideBar::show(ctx, &self.window_names, &mut self.visible_windows);
         for window in &self.windows {
             let mut is_visible = self.visible_windows.contains(window.name());
             window.show(ctx, &mut is_visible);
