@@ -4,14 +4,13 @@
 
 use std::collections::BTreeSet;
 
-use crate::sidebar::SideBar;
 #[cfg(target_arch = "wasm32")]
 use eframe::wasm_bindgen::{self, prelude::*};
 use eframe::{egui, epi};
 
 mod info;
 mod projects;
-mod sidebar;
+
 
 pub struct MainPage {
     windows: Vec<Box<dyn Window>>,
@@ -67,7 +66,7 @@ impl epi::App for MainPage {
     }
 
     fn update(&mut self, ctx: &egui::CtxRef, _frame: &epi::Frame) {
-        // SideBar::show(ctx, &self.window_names, &mut self.visible_windows);
+        
         for window in &self.windows {
             let mut is_visible = self.visible_windows.contains(window.name());
             window.show(ctx, &mut is_visible);
