@@ -1,0 +1,24 @@
+.container {
+    grid-template-areas:
+        ". header header ."
+        ". welcome sidebar ."
+        ". projects sidebar .";
+}
+
+.welcome{
+    padding-right: 3.5em;
+    text-align: left;
+
+    grid-area: welcome;
+}
+
+.projects{
+    padding-right: 3.5em;
+    text-align: left;
+
+    grid-area: projects;
+}
+
+.projects h3{
+    margin-top: 1em;
+}

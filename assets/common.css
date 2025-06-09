@@ -1,0 +1,105 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background-size: 40px 40px;
+    background-image: radial-gradient(circle, #9f8e56 1px, rgba(0, 0, 0, 0) 1px);
+
+    background-color: #151413;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 2fr 5fr 1fr 2fr;
+    gap: 2em;
+    row-gap: 1em;
+
+    align-items: center;
+    justify-content: center;
+
+    font-family: "Nova Mono Regular", monospace;
+
+    font-weight: 300;
+    line-height: 1.4;
+}
+
+header {
+    margin-top: 2em;
+
+    font-family: "Stalinist One", sans-serif;
+    text-align: left;
+
+    background-image: url("header.jpg");
+    background-size: cover;
+
+    grid-area: header;
+}
+
+header h1{
+    text-shadow: -4px 0px 10px rgba(255, 169, 35, 0.92);
+    color: #ffd336;
+
+    margin-top: 25%;
+    margin-bottom: 3%;
+    margin-left: 5%;
+}
+
+.common{
+    color: #eab537c9;
+
+    backdrop-filter: blur(2px);
+
+    padding: 2em;
+
+    border: 3px solid;
+    border-color: #bd4945;
+    box-shadow: 0 0 1em 0.4em #601412;
+}
+
+
+.sidebar {
+    align-self: stretch;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding-top: 1em;
+    padding-left: 0.5em;
+    grid-area: sidebar;
+
+    color: #fc645f;
+}
+
+.sidebar h2{
+    margin-bottom: 0.5em;
+}
+
+.big{
+    font-size:large;
+    font-weight: bold;
+}
+
+h1, h2, h3, h4{
+    color: #ffd336;
+}
+
+p{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+a{
+    text-decoration-line: none;
+    color: #73dd36
+}
+
+hr{
+    color:#f64163;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 1em 0.3em #601412;
+}
