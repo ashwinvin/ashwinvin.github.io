@@ -1,0 +1,12 @@
+.container {
+    grid-template-areas:
+        ". header header ."
+        ". content sidebar .";
+}
+
+.content{
+    padding-right: 3.5em;
+    text-align: left;
+
+    grid-area: content;
+}
