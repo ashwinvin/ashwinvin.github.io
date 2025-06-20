@@ -4,7 +4,6 @@ tags:
   - book-review
   - productivity
   - Author/James-Clear
-private: "true"
 ---
 I had convinced myself to never read self help books again as they more or less contain 
 the same premise. Nevertheless I gave atomic habits a chance because I had heard that 
