@@ -87,7 +87,7 @@ class TemplateManager:
 
         # Style file of each template will be copied to the assets folder
         if style_file := self.get_style_file:
-            mappings["style"] = "assets" + os.path.sep + style_file.name
+            mappings["style"] = "/assets" + os.path.sep + style_file.name
 
         mappings["category_sub_links"] = category_links.keys()  # type: ignore
         template = renderer.get_template(self.template_name)

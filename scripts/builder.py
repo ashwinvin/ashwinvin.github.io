@@ -47,8 +47,8 @@ class Builder:
         template_renderer, templates, base_files = self.prepare()
 
         mappings = {}
-        mappings["category_links"] = [template.link for template in templates]
-        mappings["base_links"] = ["/" + file.name for file in base_files]
+        mappings["category_links"] = {template.template_name: template.link for template in templates}
+        mappings["base_links"] = {file.stem.capitalize(): "/" + file.name for file in base_files}
 
         shutil.copytree(self.assets_dir, self.output_dir / "assets", dirs_exist_ok=True)
 

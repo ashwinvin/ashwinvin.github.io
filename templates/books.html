@@ -1,41 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ashwin's Website</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ashwin's Website</title>
 
-    <link rel="stylesheet" href="/assets/common.css">
-    $style
+        <link rel="stylesheet" href="/assets/common.css">
+        <link rel="stylesheet" href="{{style}}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nova+Mono&family=Stalinist+One&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nova+Mono&family=Stalinist+One&display=swap" rel="stylesheet">
 
-</head>
+    </head>
 
-<body>
-    <div class="container">
-        <header>
-            <i>
-                <h1>ASHWIN VINOD</h1>
-            </i>
-        </header>
+    <body>
+        <div class="container">
+            <header>
+                <i>
+                    <h1>ASHWIN VINOD</h1>
+                </i>
+            </header>
 
-        <section class="content common">
-            $content
-        </section>
+            <section class="content common">
+                {{ content }}
+            </section>
 
-        <div class="sidebar common">
-            <h2>Links</h2>
-            <ul>
-                <!-- Auto Populate Subcategories -->
-                <li><a href="https://github.com/ashwinvin">Github</a></li>
-                <li><a href="mailto:ashwinvinodsa@gmail.com">Mail</a></li>
-            </ul>
+            <div class="sidebar common">
+                <h2>Socials</h2>
+                <ul>
+                    <!-- Auto Populate Subcategories -->
+                    <li><a href="https://github.com/ashwinvin">Github</a></li>
+                    <li><a href="mailto:ashwinvinodsa@gmail.com">Mail</a></li>
+                </ul>
+                
+                <hr>
+
+                <h2>Pages</h2>
+                <ul>
+                    {% for name, link in base_links.items() %}
+                        <li><a href="{{link}}">{{name}}</a></li>
+                    {% endfor %}
+
+                    {% for name, link in category_links.items() %}
+                        <li><a href="{{link}}">{{name}}</a></li>
+                    {% endfor %}
+                </ul>
+
+            </div>
         </div>
-    </div>
-</body>
+    </body>
 
 </html>

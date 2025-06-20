@@ -61,14 +61,6 @@ header h1{
 
 .sidebar {
     align-self: stretch;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-
-    padding-top: 1em;
-    padding-left: 0.5em;
     grid-area: sidebar;
 
     color: #fc645f;
