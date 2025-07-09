@@ -1,12 +1,32 @@
-.container {
-    grid-template-areas:
-        ". header header ."
-        ". content sidebar .";
-}
 
 .content{
     padding-right: 3.5em;
     text-align: left;
 
     grid-area: content;
+}
+
+@media screen and (min-width : 320px){
+    .container {
+        grid-template-areas: 
+            "header"
+            "content"
+            "sidebar";
+    }
+}
+
+@media screen and (min-width : 766px){
+    .container{
+        grid-template-areas: 
+            "header header header"
+            "content content sidebar";
+    }
+}
+
+@media screen and (min-width: 992px){
+     .container {
+        grid-template-areas:
+            ". header header ."
+            ". content sidebar ." ;
+    }
 }
