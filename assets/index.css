@@ -24,6 +24,15 @@
             "projects"
             "sidebar";
     }
+
+    header{
+        display: none;
+    }
+
+    #uc{
+        object-fit: contain;
+        width: 100%;
+    }
 }
 
 @media screen and (min-width : 766px){
@@ -32,6 +41,9 @@
             "header header header"
             "welcome welcome sidebar"
             "projects projects sidebar";
+    }
+    header {
+        display: block !important;
     }
 }
 
