@@ -13,7 +13,6 @@ html {
 
 .container{
     display: grid;
-    align-items: center;
     justify-content: center;
     
     font-family: "Nova Mono Regular", monospace;
@@ -84,7 +83,7 @@ h1, h2, h3, h4{
     color: #ffd336;
 }
 
-p{
+p, ul{
     margin-bottom: 10px;
     margin-top: 10px;
 }
