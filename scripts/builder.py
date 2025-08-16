@@ -66,7 +66,7 @@ class Builder:
                 shutil.copy(style_path, self.output_dir / "assets" / style_path.name)
 
             for file in manager.render_files(template_renderer, mappings):
-                output_path = self.output_dir / file.output_relative_path
+                output_path = self.output_dir / file.output_path
                 # write_text fn fails if the parent folders doesn't exist
                 if not output_path.parent.exists():
                     output_path.parent.mkdir(parents=True)

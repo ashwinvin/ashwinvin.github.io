@@ -7,7 +7,6 @@
         <title>Ashwin's Website</title>
 
         <link rel="stylesheet" href="/assets/common.css">
-        <link rel="stylesheet" href="{{style}}">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +23,12 @@
             </header>
 
             <section class="content common">
-                {{ content }}
+                <h1>{{ category }} Listing</h1>
+                <ul>
+                    {% for name, link in category_children.items() %}
+                        <li><a href="{{link}}">{{name}}</a></li>
+                    {% endfor %}
+                </ul>
             </section>
 
             <div class="sidebar common">
