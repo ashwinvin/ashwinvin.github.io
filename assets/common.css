@@ -1,3 +1,10 @@
+:root {
+    --bg-color: #1a1a1a;
+    --primary-color: #898272cf;
+    --secondary-color: #4d6080;
+    --h-text-color: #e8d8c9;
+    --text-color: #eed6c4cc;
+}
 * {
     margin: 0;
     box-sizing: border-box;
@@ -5,9 +12,9 @@
 
 html {
     background-size: 40px 40px;
-    background-image: radial-gradient(circle, #9f8e56 1px, rgba(0, 0, 0, 0) 1px);
+    background-image: radial-gradient(circle, var(--primary-color), 1px, var(--bg-color) 1px);
 
-    background-color: #151413;
+    background-color: #1a1a1a;
 }
 
 
@@ -29,14 +36,14 @@ header {
     text-align: left;
 
     background-image: url("header.jpg");
-    background-size: cover;
+    background-size: auto;
 
     grid-area: header;
 }
 
 header h1{
-    text-shadow: -4px 0px 10px rgba(255, 169, 35, 0.92);
-    color: #ffd336;
+    text-shadow: -4px 0px 10px var(--primary-color);
+    color: var(--h-text-color);
 
     margin-top: 25%;
     margin-bottom: 3%;
@@ -44,15 +51,15 @@ header h1{
 }
 
 .common{
-    color: #eab537c9;
+    color: var(--text-color);
 
     backdrop-filter: blur(2px);
 
     padding: 2em;
 
     border: 3px solid;
-    border-color: #bd4945;
-    box-shadow: 0 0 1em 0.4em #601412;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 1em 0.4em var(--primary-color);
 }
 
 .content{
@@ -67,7 +74,7 @@ header h1{
     align-self: stretch;
     grid-area: sidebar;
 
-    color: #fc645f;
+    color: var(--primary-color);
 }
 
 .sidebar h2{
@@ -80,7 +87,7 @@ header h1{
 }
 
 h1, h2, h3, h4{
-    color: #ffd336;
+    color: var(--h-text-color);
 }
 
 p, ul{
@@ -90,14 +97,15 @@ p, ul{
 
 a{
     text-decoration-line: none;
-    color: #73dd36
+    color: var(--h-text-color);
+    text-shadow: var(--h-text-color) 0px 0px 0.2em;
 }
 
 hr{
-    color:#f64163;
+    color:var(--primary-color);
     margin-top: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 0 1em 0.3em #601412;
+    box-shadow: 0 0 0.8em 0.2em var(--primary-color);
 }
 
 
