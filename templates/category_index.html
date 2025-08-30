@@ -25,8 +25,20 @@
             <section class="content common">
                 <h1>{{ category }} Listing</h1>
                 <ul>
-                    {% for name, link in category_children.items() %}
-                        <li><a href="{{link}}">{{name}}</a></li>
+                    {% for article in category_children %}
+                        <li> 
+                            <details>
+                                <summary>
+                                    <a href="{{article.output_path.name}}">{{article.title}}</a>
+                                    <span class="tags">
+                                        {% for tag in article.tags %}
+                                            #{{tag}} 
+                                        {% endfor %}
+                                    </span>
+                                </summary>
+                                <p>{{article.abstract}}</p> 
+                            </details>
+                        </li>
                     {% endfor %}
                 </ul>
             </section>

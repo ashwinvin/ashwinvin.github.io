@@ -4,24 +4,46 @@ import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict
+from itertools import islice
 
 from jinja2 import Environment
 from markdown_it import MarkdownIt
+import frontmatter
 
 md_renderer = MarkdownIt("gfm-like")
 
 
+def shorten_text(text: str, word_limit: int = 50):
+    words = (word for word in text.split(" "))
+    return " ".join(islice(words, word_limit))
+
+
 @dataclass
-class RenderedTemplate:
+class RenderedDocument:
     template_name: str
     relative_path: Path
     contents: str
+    metadata: dict[str, typing.Any]
 
     @property
-    def output_path(self) :
+    def output_path(self) -> Path:
         actual_path = self.template_name / self.relative_path
         file_name = actual_path.stem.lower().replace(" ", "_")
         return actual_path.with_stem(file_name).with_suffix(".html")
+
+    @property
+    def title(self) -> str:
+        return self.metadata.get(
+            "title"
+        ) or self.relative_path.name.capitalize().replace("_", " ")
+
+    @property
+    def tags(self) -> list[str]:
+        return self.metadata.get("tags") or []
+
+    @property
+    def abstract(self) -> str:
+        return self.metadata["abstract"] + f"<a href={self.output_path.name}>...</a>"
 
 
 @dataclass
@@ -81,9 +103,7 @@ class TemplateManager:
 
         return page_links
 
-    def render_files(
-        self, renderer: Environment, mappings: Dict[str, typing.Iterable[str] | str]
-    ):
+    def render_files(self, renderer: Environment, mappings: Dict[str, typing.Any]):
         category_children = self.get_category_children()
 
         # Style file of each template will be copied to the assets folder
@@ -92,36 +112,39 @@ class TemplateManager:
 
         template = renderer.get_template(self.template_name)
 
-        rendered_templates: list[RenderedTemplate] = []
+        rendered_documents: list[RenderedDocument] = []
 
         for file_link, file in category_children.items():
-            md_content = md_renderer.render(file.read_text())
+            metadata, contents = frontmatter.parse(file.read_text())
+            metadata["abstract"] = shorten_text(contents)  # TODO: Configurable length
+
+            md_content = md_renderer.render(contents)
             if md_content is None:
                 logging.warning(f"{file} returned None upon rendering.")
                 continue
 
             mappings["content"] = md_content
             contents = template.render(mappings)
-            rendered_templates.append(
-                RenderedTemplate(self.template_name, file_link, contents)
+            rendered_documents.append(
+                RenderedDocument(self.template_name, file_link, contents, metadata)
             )
-            yield rendered_templates[-1]
+            yield rendered_documents[-1]
 
         # Render article index for category
-        # TODO: extract metadata from articles to use for index and other purposes
-        mappings["category_children"] = {
-            article.output_path.name: article.output_path.name
-            for article in rendered_templates
-        }  # type: ignore
+        mappings["category_children"] = rendered_documents  # type: ignore
 
         cat_index_template = renderer.get_template("category_index")
         cat_index_contents = cat_index_template.render(mappings)
-        yield RenderedTemplate(
-            self.template_name, Path("index.html"), cat_index_contents
+        cat_index_metadata = {}  # TODO
+        yield RenderedDocument(
+            self.template_name,
+            Path("index.html"),
+            cat_index_contents,
+            cat_index_metadata,
         )
 
         logging.info(
             "[Template Manager][%s] has finished rendering %d files",
             self.template_name,
-            len(rendered_templates),
+            len(rendered_documents),
         )
