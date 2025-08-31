@@ -111,9 +111,9 @@ class CategoryManager:
 
         for file_link, file in category_children.items():
             metadata, contents = frontmatter.parse(file.read_text())
-            metadata["abstract"] = shorten_text(contents)  # TODO: Configurable length
-
             md_content = md_renderer.render(contents)
+            metadata["abstract"] = shorten_text(md_content)  # TODO: Configurable length
+
             if md_content is None:
                 logging.warning(f"{file} returned None upon rendering.")
                 continue
