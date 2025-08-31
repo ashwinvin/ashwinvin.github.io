@@ -43,11 +43,12 @@ class RenderedDocument:
 
     @property
     def abstract(self) -> str:
-        return self.metadata["abstract"] + f"<a href={self.output_path.name}>...</a>"
+        return self.metadata["abstract"] + f"<a href=/{self.output_path}>...</a>"
 
     @property
     def private(self) -> bool:
         return self.metadata.get("private") or False
+
 
 @dataclass
 class CategoryManager:
@@ -65,11 +66,7 @@ class CategoryManager:
         if not style_file.exists():
             style_file = None
 
-        return CategoryManager(
-            source_dir.stem,
-            source_dir,
-            style_file
-        )
+        return CategoryManager(source_dir.stem, source_dir, style_file)
 
     @staticmethod
     def _get_files(directory_path: Path):
@@ -85,7 +82,6 @@ class CategoryManager:
         Path to article index which uses the template
         """
         return "/" + self.name + "/index.html"
-
 
     def get_category_children(self) -> Dict[Path, Path]:
         """
@@ -119,8 +115,10 @@ class CategoryManager:
                 continue
             mappings["content"] = md_content
 
-            template_name = metadata.get("template") or "article" # TODO: Configurable default template
-            template = renderer.get_template(template_name) # type: ignore
+            template_name = (
+                metadata.get("template") or "article"
+            )  # TODO: Configurable default template
+            template = renderer.get_template(template_name)  # type: ignore
             contents = template.render(mappings)
 
             rendered_documents.append(
