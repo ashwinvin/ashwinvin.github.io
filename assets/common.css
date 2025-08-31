@@ -83,9 +83,7 @@ summary{
 
 .tags{
     font-size: small;
-    float: right;
 }
-
 
 .sidebar h2{
     margin-bottom: 0.5em;
@@ -147,6 +145,10 @@ hr{
         grid-template-areas:
             ". header header ."
             ". content sidebar ." ;
+    }
+
+    .tags{
+        float: right;
     }
 }
 
