@@ -1,5 +1,6 @@
 ---
 title: Atomic Habits
+template: article
 tags:
   - book-review
   - productivity

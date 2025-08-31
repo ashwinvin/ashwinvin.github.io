@@ -25,7 +25,7 @@
             <section class="content common">
                 <h1>{{ category }} Listing</h1>
                 <ul>
-                    {% for article in category_children %}
+                    {% for article in category_children if not article.private %}
                         <li> 
                             <details>
                                 <summary>

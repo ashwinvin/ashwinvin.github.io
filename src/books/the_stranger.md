@@ -1,5 +1,6 @@
 ---
 title: The Stranger
+template: article
 tags:
   - book-review
   - Author/Albert-Camus

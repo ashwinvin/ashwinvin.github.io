@@ -6,7 +6,7 @@ from pathlib import Path
 
 from jinja2 import DictLoader, Environment, select_autoescape
 
-from parser import TemplateManager
+from parser import CategoryManager
 
 
 @dataclass
@@ -17,7 +17,7 @@ class Builder:
     assets_dir: Path
 
     def prepare(self):
-        template_managers: list[TemplateManager] = []
+        category_managers: list[CategoryManager] = []
         template_store = {}
 
         template_renderer = Environment(
@@ -26,19 +26,25 @@ class Builder:
 
         for file in self.template_dir.glob("*.html"):
             template_store[file.stem] = file.read_text()
-            if manager := TemplateManager.create(file, self.source_dir):
-                template_managers.append(manager)
+        
+        for category_dir in self.source_dir.iterdir():
+            if not category_dir.is_dir():
+                continue
+
+            if manager := CategoryManager.create(category_dir, self.assets_dir):
+                category_managers.append(manager)
 
         # Base files must be html (for now)
         base_files = [file for file in self.source_dir.iterdir() if file.is_file()]
 
-        logging.info("Found %d templates", len(template_managers))
+        logging.info("Found %d categories", len(category_managers))
         logging.info("Found %d base files", len(base_files))
+        logging.info("Found %d templates", len(template_store))
 
         for file in base_files:
             template_store[file.name] = file.read_text()
 
-        return template_renderer, template_managers, base_files
+        return template_renderer, category_managers, base_files
 
     def build(self):
         if not self.output_dir.exists():
@@ -47,8 +53,12 @@ class Builder:
         template_renderer, templates, base_files = self.prepare()
 
         mappings = {}
-        mappings["category_links"] = {template.template_name: template.link for template in templates}
-        mappings["base_links"] = {file.stem.capitalize(): "/" + file.name for file in base_files}
+        mappings["category_links"] = {
+            template.name: template.link for template in templates
+        }
+        mappings["base_links"] = {
+            file.stem.capitalize(): "/" + file.name for file in base_files
+        }
 
         shutil.copytree(self.assets_dir, self.output_dir / "assets", dirs_exist_ok=True)
 
@@ -62,8 +72,8 @@ class Builder:
 
         for manager in templates:
             # Copy template style files to assets folder
-            if style_path := manager.get_style_file:
-                shutil.copy(style_path, self.output_dir / "assets" / style_path.name)
+            if manager.style_file:
+                shutil.copy(manager.style_file, self.output_dir / "assets" / manager.style_file.name)
 
             for file in manager.render_files(template_renderer, mappings):
                 output_path = self.output_dir / file.output_path
@@ -92,6 +102,9 @@ if __name__ == "__main__":
     assets_dir = Path(args.assets_dir).absolute()
     template_dir = Path(args.templates_dir).absolute()
     output_dir = Path(args.output_dir).absolute()
+
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.INFO)
 
     builder = Builder(src_dir, template_dir, output_dir, assets_dir)
     builder.build()

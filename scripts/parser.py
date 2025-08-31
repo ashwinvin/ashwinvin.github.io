@@ -20,14 +20,14 @@ def shorten_text(text: str, word_limit: int = 50):
 
 @dataclass
 class RenderedDocument:
-    template_name: str
-    relative_path: Path
+    category_name: str
+    _relative_path: Path
     contents: str
     metadata: dict[str, typing.Any]
 
     @property
     def output_path(self) -> Path:
-        actual_path = self.template_name / self.relative_path
+        actual_path = self.category_name / self._relative_path
         file_name = actual_path.stem.lower().replace(" ", "_")
         return actual_path.with_stem(file_name).with_suffix(".html")
 
@@ -35,7 +35,7 @@ class RenderedDocument:
     def title(self) -> str:
         return self.metadata.get(
             "title"
-        ) or self.relative_path.name.capitalize().replace("_", " ")
+        ) or self._relative_path.name.capitalize().replace("_", " ")
 
     @property
     def tags(self) -> list[str]:
@@ -45,36 +45,37 @@ class RenderedDocument:
     def abstract(self) -> str:
         return self.metadata["abstract"] + f"<a href={self.output_path.name}>...</a>"
 
+    @property
+    def private(self) -> bool:
+        return self.metadata.get("private") or False
 
 @dataclass
-class TemplateManager:
-    template_name: str
-    _template_path: Path
+class CategoryManager:
+    name: str
     source_dir: Path
+    style_file: Path | None
 
     @classmethod
     def create(
         cls,
-        template_path: Path,
-        source_path: Path,
-    ) -> "TemplateManager | None":
-        for folder in source_path.iterdir():
-            if folder.name == template_path.stem:
-                return TemplateManager(
-                    template_path.stem,
-                    template_path.absolute(),
-                    folder.absolute(),
-                )
+        source_dir: Path,
+        assets_dir: Path,
+    ) -> "CategoryManager":
+        style_file = assets_dir / f"{source_dir.name}.css"
+        if not style_file.exists():
+            style_file = None
 
-        logging.warning(
-            f"Unable to find associated files for template {template_path.name}"
+        return CategoryManager(
+            source_dir.stem,
+            source_dir,
+            style_file
         )
 
     @staticmethod
     def _get_files(directory_path: Path):
         for file in directory_path.iterdir():
             if file.is_dir():
-                yield from TemplateManager._get_files(file)
+                yield from CategoryManager._get_files(file)
             if file.is_file():
                 yield file.absolute()
 
@@ -83,12 +84,8 @@ class TemplateManager:
         """
         Path to article index which uses the template
         """
-        return "/" + self.template_name + "/index.html"
+        return "/" + self.name + "/index.html"
 
-    @property
-    def get_style_file(self) -> Path | None:
-        if (style_path := self._template_path.with_suffix(".css")).exists():
-            return style_path
 
     def get_category_children(self) -> Dict[Path, Path]:
         """
@@ -97,7 +94,7 @@ class TemplateManager:
         """
         page_links = {}
 
-        for page_path in TemplateManager._get_files(self.source_dir):
+        for page_path in CategoryManager._get_files(self.source_dir):
             page_link = page_path.relative_to(self.source_dir)
             page_links[page_link] = page_path
 
@@ -107,10 +104,8 @@ class TemplateManager:
         category_children = self.get_category_children()
 
         # Style file of each template will be copied to the assets folder
-        if style_file := self.get_style_file:
-            mappings["style"] = "/assets" + os.path.sep + style_file.name
-
-        template = renderer.get_template(self.template_name)
+        if self.style_file:
+            mappings["style"] = "/assets" + os.path.sep + self.style_file.name
 
         rendered_documents: list[RenderedDocument] = []
 
@@ -122,11 +117,14 @@ class TemplateManager:
             if md_content is None:
                 logging.warning(f"{file} returned None upon rendering.")
                 continue
-
             mappings["content"] = md_content
+
+            template_name = metadata.get("template") or "article" # TODO: Configurable default template
+            template = renderer.get_template(template_name) # type: ignore
             contents = template.render(mappings)
+
             rendered_documents.append(
-                RenderedDocument(self.template_name, file_link, contents, metadata)
+                RenderedDocument(self.name, file_link, contents, metadata)
             )
             yield rendered_documents[-1]
 
@@ -137,7 +135,7 @@ class TemplateManager:
         cat_index_contents = cat_index_template.render(mappings)
         cat_index_metadata = {}  # TODO
         yield RenderedDocument(
-            self.template_name,
+            self.name,
             Path("index.html"),
             cat_index_contents,
             cat_index_metadata,
@@ -145,6 +143,6 @@ class TemplateManager:
 
         logging.info(
             "[Template Manager][%s] has finished rendering %d files",
-            self.template_name,
+            self.name,
             len(rendered_documents),
         )
